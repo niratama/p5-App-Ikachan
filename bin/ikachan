@@ -21,8 +21,8 @@ my $parser = Getopt::Long::Parser->new(
 );
 
 my %options;
-my($http_host, $http_port, $irc_server, $irc_port, $irc_keyword, $irc_nickname, $irc_user, $no_post_with_join, $irc_post_interval, $irc_reconnect_interval) =
-    ('127.0.0.1', 4979, undef, 6667, undef, 'ikachan', undef, 0, 2, 3);
+my($http_host, $http_port, $irc_server, $irc_port, $irc_keyword, $irc_nickname, $irc_user, $no_post_with_join, $irc_post_interval, $irc_reconnect_interval, $irc_enable_ssl) =
+    ('127.0.0.1', 4979, undef, 6667, undef, 'ikachan', undef, 0, 2, 3, 0);
 my @reverse_proxy;
 $parser->getoptions(
     'o|host=s'     => \$http_host,
@@ -36,6 +36,7 @@ $parser->getoptions(
     'i|interval=s' => \$irc_post_interval,
     'R|reconnect-interval=s' => \$irc_reconnect_interval,
     'j|no-post-with-join' => \$no_post_with_join,
+    's|enable-ssl' => \$irc_enable_ssl,
     'h|help'       => \$options{help},
     'v|version'    => \$options{version},
 );
@@ -57,6 +58,7 @@ my $create_session; $create_session = sub {
         nickname => $irc_nickname,
         user     => $irc_user,
         interval => $irc_post_interval,
+        enable_ssl => $irc_enable_ssl,
         on_connect => sub {
             my ($con, $err) = @_;
             if (defined $err) {
